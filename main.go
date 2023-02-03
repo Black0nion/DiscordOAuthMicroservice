@@ -35,7 +35,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Step 1: Redirect to the OAuth 2.0 Authorization page.
 		// This route could be named /login etc
-		http.Redirect(w, r, conf.AuthCodeURL(state), http.StatusTemporaryRedirect)
+		http.Redirect(w, r, conf.AuthCodeURL(state)+"&prompt=none", http.StatusTemporaryRedirect)
 	})
 
 	// Step 2: After user authenticates their accounts this callback is fired.
