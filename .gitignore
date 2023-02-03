@@ -45,3 +45,6 @@ config.json
 
 # production
 /build
+
+# misc
+*.env
