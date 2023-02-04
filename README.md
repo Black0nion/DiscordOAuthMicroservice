@@ -1,13 +1,26 @@
 ## DiscordOAuthMicroservice
+A lightweight microservice for authenticating users with Discord OAuth2.
+Authenticates users with Discord OAuth2 and stores their tokens in a database.
+Users then authenticate with a session id that is linked with those tokens.
 
-### To get started you will need to create a .env file
-
+### Configuration
+To configure the project create a `.env` file in the root directory of the project with the following variables:
 ```env
+# Discord application client id
 CLIENT_ID=
+# Discord application client secret
 CLIENT_SECRET=
-DB_USERNAME=
-DB_PASSWORD=
+# Database IP - can contain port
 DB_IP=
+# Datbase Username
+DB_USERNAME=
+# Database Password
+DB_PASSWORD=
+# Server port
+PORT=
+# Public URL of the server - will get suffixed with `/auth/callback` - this is where the user will be redirected after authenticating
+PUBLIC_URL=
 ```
 
-### To run the project run the command ``go run github.com/cosmtrek/air``
+### Running
+To run the project run `go run ./src` in the root directory of the project.
