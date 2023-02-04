@@ -1,4 +1,4 @@
-module BlackOnionDashBoardAPI
+module DiscordOAuthMicroservice
 
 go 1.19
 
