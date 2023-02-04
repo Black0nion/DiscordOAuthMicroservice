@@ -5,7 +5,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/ravener/discord-oauth2"
 	"golang.org/x/oauth2"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -47,40 +46,30 @@ func handleAuth() {
 			w.Write([]byte("State does not match."))
 			return
 		}
+
 		// Step 3: We exchange the code we got for an access token
 		// Then we can use the access token to do actions, limited to scopes we requested
 		token, err := conf.Exchange(context.Background(), r.FormValue("code"))
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			log.Println(err)
 			return
 		}
 
-		// Step 4: Use the access token, here we use it to get the logged in user's info.
-		res, err := conf.Client(context.Background(), token).Get("https://discord.com/api/users/@me")
-
-		if err != nil || res.StatusCode != 200 {
-			w.WriteHeader(http.StatusInternalServerError)
-			if err != nil {
-				w.Write([]byte(err.Error()))
-			} else {
-				w.Write([]byte(res.Status))
-			}
-			return
-		}
-
-		defer res.Body.Close()
-
-		body, err := ioutil.ReadAll(res.Body)
-
+		var sid string
+		sid, err = CreateSession(token.AccessToken, token.RefreshToken, token.Expiry)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err.Error()))
+			log.Println(err)
 			return
 		}
 
-		w.Write(body)
+		// Step 4: We can now return the created session id to the user
+		_, err = w.Write([]byte(sid))
+		if err != nil {
+			return
+		}
 	})
 
 	log.Println("Listening on :3000")
