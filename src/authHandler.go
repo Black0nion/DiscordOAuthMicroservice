@@ -23,7 +23,7 @@ func handleAuth() {
 	}
 
 	conf := &oauth2.Config{
-		RedirectURL: "http://localhost:3000/auth/callback",
+		RedirectURL: os.Getenv("PUBLIC_URL") + "/auth/callback",
 		// This next 2 lines must be edited before running this.
 		ClientID:     os.Getenv("CLIENT_ID"),
 		ClientSecret: os.Getenv("CLIENT_SECRET"),
