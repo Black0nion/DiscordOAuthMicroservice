@@ -2,7 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"log"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 )
@@ -32,4 +34,12 @@ func GenerateSessionID(db *sql.DB) string {
 	}
 
 	return generatedIDBuilder.String()
+}
+
+func GetEnv(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		log.Fatalf("Environment variable %s is empty!", key)
+	}
+	return value
 }

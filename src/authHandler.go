@@ -7,7 +7,6 @@ import (
 	"golang.org/x/oauth2"
 	"log"
 	"net/http"
-	"os"
 )
 
 // This is the state key used for security, sent in login, validated in callback.
@@ -23,10 +22,10 @@ func handleAuth() {
 	}
 
 	conf := &oauth2.Config{
-		RedirectURL: os.Getenv("PUBLIC_URL") + "/auth/callback",
+		RedirectURL: GetEnv("PUBLIC_URL") + "/auth/callback",
 		// This next 2 lines must be edited before running this.
-		ClientID:     os.Getenv("CLIENT_ID"),
-		ClientSecret: os.Getenv("CLIENT_SECRET"),
+		ClientID:     GetEnv("CLIENT_ID"),
+		ClientSecret: GetEnv("CLIENT_SECRET"),
 		Scopes:       []string{discord.ScopeIdentify, discord.ScopeGuilds},
 		Endpoint:     discord.Endpoint,
 	}
@@ -72,6 +71,7 @@ func handleAuth() {
 		}
 	})
 
-	log.Println("Listening on :3000")
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	port := ":" + GetEnv("PORT")
+	log.Println("Listening on " + port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }

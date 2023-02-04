@@ -6,7 +6,6 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"log"
-	"os"
 	"time"
 )
 
@@ -19,10 +18,10 @@ func connectToDatabase() {
 		return
 	}
 
-	username := os.Getenv("DB_USERNAME")
-	password := os.Getenv("DB_PASSWORD")
-	databaseIP := os.Getenv("DB_IP")
-	databaseName := os.Getenv("DB_NAME")
+	username := GetEnv("DB_USERNAME")
+	password := GetEnv("DB_PASSWORD")
+	databaseIP := GetEnv("DB_IP")
+	databaseName := GetEnv("DB_NAME")
 
 	connStr := "postgresql://%s:%s@%s/%s?sslmode=disable"
 	connStr = fmt.Sprintf(connStr, username, password, databaseIP, databaseName)
@@ -51,6 +50,9 @@ func CreateSession(accessToken string, refreshToken string, expiresAt time.Time)
 		if err != nil {
 			return "", err
 		}
+
+		// Update the expires_at column
+		_, err = db.Exec("UPDATE sessions SET expires_at = $1 WHERE session_id = $2", expiresAt.UnixMilli(), id)
 
 		return id, nil
 	}
