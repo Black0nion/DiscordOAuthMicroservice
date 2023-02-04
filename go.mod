@@ -5,12 +5,14 @@ go 1.19
 require (
 	github.com/gofiber/fiber/v2 v2.42.0
 	github.com/joho/godotenv v1.4.0
+	github.com/lib/pq v1.10.7
 	github.com/ravener/discord-oauth2 v0.0.0-20220615092331-f6a9839c223e
 	golang.org/x/oauth2 v0.4.0
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/gofiber/template v1.7.4 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
