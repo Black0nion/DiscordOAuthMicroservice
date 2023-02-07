@@ -5,7 +5,7 @@ Users then authenticate with a session id that is linked with those tokens.
 
 ### Configuration
 To configure the project create a `.env` file in the root directory of the project with the following variables:
-```env
+```dotenv
 # Discord application client id
 CLIENT_ID=
 # Discord application client secret
