@@ -1,0 +1,11 @@
+FROM alpine:3.17
+
+WORKDIR /app
+
+ARG TARGETPLATFORM
+
+COPY $TARGETPLATFORM/discord-oauth-microservice .
+
+RUN chmod +x discord-oauth-microservice
+
+ENTRYPOINT [ "/app/discord-oauth-microservice" ]
