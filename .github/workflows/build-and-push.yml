@@ -26,7 +26,7 @@ jobs:
           go-version: '^1.20'
 
       - name: Go build
-        run: GOOS="{{ matrix.os }}" GOARCH="{{ matrix.arch }}" go build -o discord-oauth-microservice ./src
+        run: GOOS="${{ matrix.os }}" GOARCH="${{ matrix.arch }}" go build -o discord-oauth-microservice ./src
 
       - name: Upload
         uses: actions/upload-artifact@v3
