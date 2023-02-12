@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/joho/godotenv"
 	"github.com/ravener/discord-oauth2"
 	"golang.org/x/oauth2"
@@ -14,6 +15,10 @@ import (
 // but in real apps you must provide a proper function that generates a state.
 var state = "random"
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func handleAuth() {
 	err := godotenv.Load()
 	if err != nil {
@@ -22,7 +27,7 @@ func handleAuth() {
 	}
 
 	conf := &oauth2.Config{
-		RedirectURL: GetEnv("PUBLIC_URL") + "/auth/callback",
+		RedirectURL: GetEnv("REDIRECT_URL"),
 		// This next 2 lines must be edited before running this.
 		ClientID:     GetEnv("CLIENT_ID"),
 		ClientSecret: GetEnv("CLIENT_SECRET"),
@@ -39,10 +44,12 @@ func handleAuth() {
 	// Step 2: After user authenticates their accounts this callback is fired.
 	// the state we sent in login is also sent back to us here
 	// we have to verify it as necessary before continuing.
-	http.HandleFunc("/auth/callback", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/auth/exchange_code", func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+
 		if r.FormValue("state") != state {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("State does not match."))
+			_, _ = w.Write([]byte("State does not match."))
 			return
 		}
 
@@ -51,6 +58,21 @@ func handleAuth() {
 		token, err := conf.Exchange(context.Background(), r.FormValue("code"))
 
 		if err != nil {
+			// check if the error is of type *oauth2.RetrieveError
+			if oauthError, ok := err.(*oauth2.RetrieveError); ok {
+				w.WriteHeader(oauthError.Response.StatusCode)
+
+				// load body from error and parse it as JSON
+				var body map[string]any
+				err := json.Unmarshal(oauthError.Body, &body)
+				if err == nil {
+					i := body["error_description"]
+
+					bytes := []byte(i.(string))
+					_, _ = w.Write(bytes)
+				}
+			}
+
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Println(err)
 			return
@@ -65,10 +87,7 @@ func handleAuth() {
 		}
 
 		// Step 4: We can now return the created session id to the user
-		_, err = w.Write([]byte(sid))
-		if err != nil {
-			return
-		}
+		_, _ = w.Write([]byte(sid))
 	})
 
 	port := ":" + GetEnv("PORT")
