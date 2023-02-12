@@ -12,15 +12,22 @@ CLIENT_ID=
 CLIENT_SECRET=
 # Database IP - can contain port
 DB_IP=
+# Database name
+DB_NAME=
 # Datbase Username
 DB_USERNAME=
 # Database Password
 DB_PASSWORD=
 # Server port
 PORT=
-# Public URL of the server - will get suffixed with `/auth/callback` - this is where the user will be redirected after authenticating
-PUBLIC_URL=
+# Redirect URL for Discord OAuth2 - even if you only use the exchange endpoint this still has to be set!
+REDIRECT_URL=
+# OPTIONAL: CORS origin - can be a list of origins separated by a comma - if not set, all origins are allowed (*)
+CORS_ORIGIN=
 ```
 
 ### Running
 To run the project run `go run ./src` in the root directory of the project.
+
+### Docker
+There's a docker image available on [GHCR](https://github.com/Black0nion/DiscordOAuthMicroservice/pkgs/container/discordoauthmicroservice). 
