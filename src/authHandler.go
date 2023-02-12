@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/joho/godotenv"
 	"github.com/ravener/discord-oauth2"
 	"golang.org/x/oauth2"
 	"log"
@@ -15,16 +14,14 @@ import (
 // but in real apps you must provide a proper function that generates a state.
 var state = "random"
 
+var corsHeaderValue string
+
 func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Origin", corsHeaderValue)
 }
 
 func handleAuth() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file!")
-		return
-	}
+	corsHeaderValue = GetEnvOrDefault("CORS_ORIGIN", "*")
 
 	conf := &oauth2.Config{
 		RedirectURL: GetEnv("REDIRECT_URL"),
@@ -70,6 +67,8 @@ func handleAuth() {
 
 					bytes := []byte(i.(string))
 					_, _ = w.Write(bytes)
+
+					return
 				}
 			}
 
