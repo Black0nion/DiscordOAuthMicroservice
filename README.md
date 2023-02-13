@@ -10,7 +10,7 @@ To configure the project create a `.env` file in the root directory of the proje
 CLIENT_ID=
 # Discord application client secret
 CLIENT_SECRET=
-# Database IP - can contain port
+# Database IP - can contain port e.g. localhost:5432
 DB_IP=
 # Database name
 DB_NAME=
