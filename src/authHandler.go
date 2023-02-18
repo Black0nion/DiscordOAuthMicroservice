@@ -89,6 +89,8 @@ func handleAuth() {
 		_, _ = w.Write([]byte(sid))
 	})
 
+	handleUser()
+	handleGuilds()
 	port := ":" + GetEnv("PORT")
 	log.Println("Listening on " + port)
 	log.Fatal(http.ListenAndServe(port, nil))
